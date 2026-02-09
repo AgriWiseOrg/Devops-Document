@@ -48,6 +48,8 @@ Response Structure: The JSON response bodies are inspected to ensure they match 
 4.2 Agriwise Domain Validation
 Market Intelligence: The testing suite verifies the /api/market/prices endpoint. It asserts that querying for "Wheat" returns a JSON success response containing price data.
 Historical Data: We validate the /api/market/history endpoint by simulating requests. The tests confirm that the API correctly handles valid crop queries and rejects malformed requests (e.g., missing crop names) with the appropriate error codes.
+
+
 5. Conclusion
 The Agriwise validation strategy is streamlined and effective:
 
