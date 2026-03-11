@@ -141,11 +141,52 @@ Continuous Integration (CI) and Continuous Deployment (CD) pipelines are establi
   1. **Checkout:** Checks out the backend codebase.
   2. **Tests Validation:** Executes backend unit and integration tests.
 
-### Backend Deployment Pipeline (Azure)
-**Workflow File:** `backend/.github/workflows/main_agriwise-backend-api-123.yml`
-- **Triggers:** Pushes to `main` branch or manual dispatch (`workflow_dispatch`).
-- **Environment:** Ubuntu-latest, Node.js v20.x.
-- **Stages:**
-  1. **Build & Test:** Checks out code, configures Node, installs dependencies, builds the node application (`npm run build`), and validates tests.
-  2. **Artifact Generation:** Packages the built app and uploads it as a GitHub artifact (`node-app`).
-  3. **Deployment:** Downloads the artifact, authenticates via Azure workflows, and deploys directly to the **`agriwise-backend-api-123`** Azure Web App.
+### Continuous Deployment (CD)
+
+The application utilizes auto-deployment mechanisms connected directly to the GitHub repository rather than through explicit GitHub Action deployment YAMLs.
+
+**Frontend Deployment (Vercel):**
+- **Platform:** [Vercel](https://vercel.com)
+- **Trigger:** Automated deployment on every push to the `main` branch.
+- **Process:** Vercel automatically detects the Vite React application, executes `npm run build`, and serves the static output across its Edge Network. It utilizes the `vercel.json` configuration for routing rules.
+
+**Backend Deployment (Render):**
+- **Platform:** [Render](https://render.com)
+- **Trigger:** Automated deployment on every push to the `main` branch.
+- **Process:** Render detects the Node.js application, spins up the environment, executes `npm install`, and starts the production server using the defined startup commands (`node server.js`). A Keep-Alive mechanism prevents the free-tier service from spinning down due to inactivity.
+
+---
+
+## 7. Test Execution Results
+
+Here is the snapshot of the latest test suite execution outputs demonstrating full stability across the project.
+
+**Frontend Execution (Vitest):**
+```bash
+  ✓ src/components/MarketPlace.test.jsx (8 tests) 
+  ✓ src/components/FrontPage.test.jsx (4 tests) 
+  ✓ src/components/Weather.integration.test.jsx (2 tests)
+  ...
+
+ Test Files  14 passed (14)
+      Tests  46 passed (46)
+   Start at  09:46:27
+   Duration  33.88s (transform 42.44s, setup 45.81s, import 158.62s, tests 20.87s, environment 175.86s)
+
+Exit code: 0
+```
+
+**Backend Execution (Jest):**
+```bash
+  ✓ should create a valid prediction model 
+  ✓ should fail validation without required fields 
+  ✓ should fetch all reports successfully
+  ...
+
+Test Suites: 8 passed, 8 total
+Tests:       33 passed, 33 total
+Snapshots:   0 total
+Time:        4.197 s
+Ran all test suites.
+```
+
