@@ -115,3 +115,37 @@ npx playwright test
 # Display the Playwright HTML test report
 npx playwright show-report
 ```
+
+---
+
+## 6. CI/CD Implementation
+
+Continuous Integration (CI) and Continuous Deployment (CD) pipelines are established using **GitHub Actions**. The pipelines ensure that code pushed to the `main` branch or submitted via Pull Requests is verified and deployed automatically.
+
+### Frontend CI Pipeline
+**Workflow File:** `frontend/.github/workflows/ci.yml`
+- **Triggers:** Pushes and Pull Requests to the `main` branch.
+- **Environment:** Ubuntu-latest, Node.js v20.
+- **Stages:**
+  1. **Checkout:** Checks out the source code.
+  2. **Setup Node:** Configures Node.js and caches `npm` dependencies.
+  3. **Install Dependencies:** Runs `npm ci` for a clean install.
+  4. **Linter Checks:** Ensures code adheres to defined styles.
+  5. **Tests Validation:** Executes the frontend testing suites.
+
+### Backend CI Pipeline
+**Workflow File:** `backend/.github/workflows/ci.yml`
+- **Triggers:** Pushes and Pull Requests to the `main` branch.
+- **Environment:** Ubuntu-latest.
+- **Stages:**
+  1. **Checkout:** Checks out the backend codebase.
+  2. **Tests Validation:** Executes backend unit and integration tests.
+
+### Backend Deployment Pipeline (Azure)
+**Workflow File:** `backend/.github/workflows/main_agriwise-backend-api-123.yml`
+- **Triggers:** Pushes to `main` branch or manual dispatch (`workflow_dispatch`).
+- **Environment:** Ubuntu-latest, Node.js v20.x.
+- **Stages:**
+  1. **Build & Test:** Checks out code, configures Node, installs dependencies, builds the node application (`npm run build`), and validates tests.
+  2. **Artifact Generation:** Packages the built app and uploads it as a GitHub artifact (`node-app`).
+  3. **Deployment:** Downloads the artifact, authenticates via Azure workflows, and deploys directly to the **`agriwise-backend-api-123`** Azure Web App.
